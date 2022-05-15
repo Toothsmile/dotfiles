@@ -1,14 +1,14 @@
 local opts = { noremap = true, silent = true }
-
 local term_opts = { silent = true }
+
 
 -- Shorten function name
 local keymap = vim.api.nvim_set_keymap
 
 --Remap space as leader key
 keymap("", ";", "<Nop>", opts)
-vim.g.mapleader = ";"
-vim.g.maplocalleader = ";"
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- Modes normal_mode = "n",
 --   insert_mode = "i",
@@ -26,8 +26,8 @@ keymap("n", "<C-l>", "<C-w>l", opts)
 keymap("n", "<C-W>m", ":WinShift<cr>", opts)
 
 -- i j remap to gi gj to get the consistent behaviour in wrap content mode (i.e. set wrap)
--- keymap("n", "j", "<Plug>(accelerated_jk_gj)", opts)
--- keymap("n", "k", "<Plug>(accelerated_jk_gk)", opts)
+keymap("n", "j", "gj", opts)
+keymap("n", "k", "gk", opts)
 
 
 -- FileExpoler
@@ -37,17 +37,20 @@ keymap("n", "<leader>f", ":NvimTreeFindFile<cr>", opts)
 keymap("n", "<leader>l", ":nohl<cr>", opts)
 -- save buffer
 keymap("n", "<leader>w", ":w<cr>", opts)
+
+  keymap("n", "sl", ":vsplit<cr>", opts)
+  keymap("n", "hl", ":split<cr>", opts)
 -- exit cur window
-keymap("n", "<leader>q", ":q<cr>", opts)
+keymap("n", "Q", ":q<cr>", opts)
 -- delete cur buffer
-keymap("n", "<leader>d", ":bdelete<cr>", opts)
-keymap("n", "<leader>D", ":bdelete<cr>", opts)
+keymap("n", "<leader>d", ":Bdelete<cr>", opts)
+keymap("n", "<leader>D", ":Bdelete<cr>", opts)
 -- exit whole program
 keymap("n", "ZZ", ":lua require('user.utils').SaveAndExit()<cr>", opts)
 -- remap macro record key
-keymap("n", "Q", "q", opts)
+----keymap("n", "Q", "q", opts)
 -- cancel q
-keymap("n", "q", "<Nop>", opts)
+----keymap("n", "q", "<Nop>", opts)
 
 -- center cursor
 keymap("n", "n", "nzzzv", opts)
@@ -80,8 +83,8 @@ keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
 keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 
 -- Insert --
--- Press jl fast to enter
-keymap("i", "jl", "<ESC>", opts)
+-- Press jj fast to enter
+keymap("i", "jj", "<ESC>", opts)
 
 -- Visual --
 -- Stay in indent mode
@@ -124,20 +127,20 @@ keymap("n", "<leader>u", "<cmd>Trouble lsp_references<cr>", opts)
 -- calltree
 keymap("n", "<leader>in", "<cmd>lua vim.lsp.buf.incoming_calls()<cr>", opts)
 
--- debug
-keymap("n", "<leader>db", "<cmd>lua require'dap'.toggle_breakpoint()<cr>", opts)
-keymap("n", "<leader>dB", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input '[Condition] > ')<cr>", opts)
--- keymap("n", "<leader>dr", "lua require'dap'.repl.open()<cr>", opts)
-keymap("n", "<leader>dl", "lua require'dap'.run_last()<cr>", opts)
-keymap('n', '<F10>', '<cmd>lua require"user.dap.dap-util".reload_continue()<CR>', opts)
-keymap("n", "<F4>", "<cmd>lua require'dap'.terminate()<cr>", opts)
-keymap("n", "<F5>", "<cmd>lua require'dap'.continue()<cr>", opts)
-keymap("n", "<F6>", "<cmd>lua require'dap'.step_over()<cr>", opts)
-keymap("n", "<F7>", "<cmd>lua require'dap'.step_into()<cr>", opts)
-keymap("n", "<F8>", "<cmd>lua require'dap'.step_out()<cr>", opts)
-keymap("n", "K", "<cmd>lua require'dapui'.eval()<cr>", opts)
--- keymap("n", "<leader>dt", "<cmd>lua require'dapui'.toggle()<cr>", opts)
--- keymap("n", "<leader>dx", "<cmd>lua require'dap'.terminate()<cr>", opts)
+ -- sjj -- debug
+ -- keymap("n", "<leader>db", "<cmd>lua require'dap'.toggle_breakpoint()<cr>", opts)
+ -- keymap("n", "<leader>dB", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input '[Condition] > ')<cr>", opts)
+ -- -- keymap("n", "<leader>dr", "lua require'dap'.repl.open()<cr>", opts)
+ -- keymap("n", "<leader>dl", "lua require'dap'.run_last()<cr>", opts)
+ -- keymap('n', '<F10>', '<cmd>lua require"user.dap.dap-util".reload_continue()<CR>', opts)
+ -- keymap("n", "<F4>", "<cmd>lua require'dap'.terminate()<cr>", opts)
+ -- keymap("n", "<F5>", "<cmd>lua require'dap'.continue()<cr>", opts)
+ -- keymap("n", "<F6>", "<cmd>lua require'dap'.step_over()<cr>", opts)
+ -- keymap("n", "<F7>", "<cmd>lua require'dap'.step_into()<cr>", opts)
+ -- keymap("n", "<F8>", "<cmd>lua require'dap'.step_out()<cr>", opts)
+ -- keymap("n", "K", "<cmd>lua require'dapui'.eval()<cr>", opts)
+ -- -- keymap("n", "<leader>dt", "<cmd>lua require'dapui'.toggle()<cr>", opts)
+ -- -- keymap("n", "<leader>dx", "<cmd>lua require'dap'.terminate()<cr>", opts)
 
 -- git diff view
 keymap('n', '<leader>j', ']c', opts)

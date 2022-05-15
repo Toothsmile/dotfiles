@@ -16,12 +16,12 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
-vim.cmd [[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]]
+-- vim.cmd [[
+--   augroup packer_user_config
+--     autocmd!
+--     autocmd BufWritePost plugins.lua source <afile> | PackerSync
+--   augroup end
+-- ]]
 
 -- Use a protected call so we don't error out on first use
 local status_ok, packer = pcall(require, "packer")
@@ -31,6 +31,8 @@ end
 
 -- Have packer use a popup window
 packer.init {
+  max_jobs = 20,
+  auto_clean = false,
   display = {
     -- open_fn = function()
     --   return require("packer.util").float { border = "rounded" }
@@ -75,23 +77,22 @@ packer.init {
 
 -- Install your plugins here
 return packer.startup(function(use)
+  use "lewis6991/impatient.nvim" -- Speed up loading Lua modules    TODO: figure out how to use this
   -- My plugins here
   use "wbthomason/packer.nvim" -- Have packer manage itself
-  use "lewis6991/impatient.nvim" -- Speed up loading Lua modules    TODO: figure out how to use this
   use "nvim-lua/popup.nvim" -- An implementation of the Popup API from vim in Neovim
   use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
   use "rcarriga/nvim-notify" -- notify
-  use "kyazdani42/nvim-web-devicons" -- icons
 
-  -- Telescope
-  use {
-    "nvim-telescope/telescope.nvim",
-    tag = "nvim-0.6",
-  }
-  use {
-    "nvim-telescope/telescope-fzf-native.nvim",
-    run = "make",
-  }
+   -- Telescope
+   use {
+     "nvim-telescope/telescope.nvim",
+   tag = 'nvim-0.6',
+   }
+   use {
+     "nvim-telescope/telescope-fzf-native.nvim",
+     run = "make",
+   }
   -- use {
   --   "nvim-telescope/telescope-frecency.nvim",
   --   requires = {"tami5/sqlite.lua"}   -- NOTE: need to install sqlite lib
@@ -100,13 +101,12 @@ return packer.startup(function(use)
   use "nvim-telescope/telescope-live-grep-raw.nvim"
   use "MattesGroeger/vim-bookmarks"
   use "tom-anders/telescope-vim-bookmarks.nvim"
-  use "nvim-telescope/telescope-dap.nvim"
 
   -- Treesittetr
   use {
     "nvim-treesitter/nvim-treesitter",
+    commit = "668de0951a36ef17016074f1120b6aacbe6c4515",
     run = ":TSUpdate",
-    commit = "44b7c8100269161e20d585f24bce322f6dcdf8d2",
   }
   use {
     "nvim-treesitter/nvim-treesitter-textobjects",
@@ -129,20 +129,15 @@ return packer.startup(function(use)
   -- use "RishabhRD/nvim-lsputils"
   use "kosayoda/nvim-lightbulb" -- code action
   use "ray-x/lsp_signature.nvim" -- show function signature when typing
-  -- use {
-  --   "ray-x/guihua.lua",
-  --   run = 'cd lua/fzy && make'
-  -- }
-  -- use { 'ray-x/navigator.lua' } -- super powerful plugin  for code navigation
 
   -- Editor enhance
   use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
   use "terrortylor/nvim-comment"
-  use "Shatur/neovim-session-manager"
+  use "rmagatti/auto-session" -- auto restore session(constains layout, window etc..)
   -- cmp plugins
   use {
     "hrsh7th/nvim-cmp",
-    -- commit = "4f1358e659d51c69055ac935e618b684cf4f1429",
+     commit = "bba6fb67fdafc0af7c5454058dfbabc2182741f4",
   } -- The completion plugin
   use "hrsh7th/cmp-buffer" -- buffer completions
   use "hrsh7th/cmp-path" -- path completions
@@ -150,18 +145,15 @@ return packer.startup(function(use)
   use "saadparwaiz1/cmp_luasnip" -- snippet completions
   use "hrsh7th/cmp-nvim-lsp"
   use "hrsh7th/cmp-nvim-lua"
-  -- use "quangnguyen30192/cmp-nvim-tags"
-  use "jsfaint/gen_tags.vim"
-  use "ray-x/cmp-treesitter"
   use "f3fora/cmp-spell" -- spell check
-  -- use "github/copilot.vim"  -- Copilot setup,
+
   -- use {
-  --   "tzachar/cmp-tabnine", -- use ":CmpTabnineHub" command to login
+  --   "tzachar/cmp-tabnine",    -- use ":CmpTabnineHub" command to login
   --   after = "nvim-cmp",
   --   run = 'bash ./install.sh',
   -- }
   use "ethanholz/nvim-lastplace" -- auto return back to the last modified positon when open a file
-  -- use "BurntSushi/ripgrep" -- ripgrep
+  use "BurntSushi/ripgrep" -- ripgrep
   use "nvim-pack/nvim-spectre" -- search and replace pane
   -- use "haringsrob/nvim_context_vt" -- show if, for, function... end as virtual text
   -- use "code-biscuits/nvim-biscuits" -- AST enhance, require treesitter
@@ -195,7 +187,7 @@ return packer.startup(function(use)
   }
   use "theHamsta/nvim-dap-virtual-text"
   use "rcarriga/nvim-dap-ui"
-  -- use "nvim-telescope/telescope-file-browser.nvim"
+  use "nvim-telescope/telescope-dap.nvim"
   -- use "mfussenegger/nvim-dap-python"    -- debug python
   -- use { "leoluz/nvim-dap-go", module = "dap-go" } -- debug golang
   -- use { "jbyuki/one-small-step-for-vimkind", module = "osv" } -- debug any Lua code running in a Neovim instance
@@ -224,12 +216,18 @@ return packer.startup(function(use)
   }
 
   -- use "folke/tokyonight.nvim"
-  use "kyazdani42/nvim-tree.lua" -- file explore
+  use {
+    'kyazdani42/nvim-tree.lua',
+    requires = {
+      'kyazdani42/nvim-web-devicons', -- optional, for file icon
+    },
+    tag = 'nightly' -- optional, updated every week. (see issue #1193)
+}
   use {
     "akinsho/bufferline.nvim", -- tab
     tag = "v1.2.0",
   }
-  -- use "moll/vim-bbye"
+  use "moll/vim-bbye"
   use "nvim-lualine/lualine.nvim" -- status line
   use "goolord/alpha-nvim" -- welcome page
   -- use "startup-nvim/startup.nvim"     -- welcome page
@@ -239,16 +237,17 @@ return packer.startup(function(use)
   --   "kevinhwang91/nvim-hlslens", -- highlight search
   --   disable = true,
   -- }
-  -- use "kevinhwang91/nvim-bqf" -- better quick fix, use trouble instead
-  -- use "RRethy/vim-illuminate" -- highlight undercursor word
-  -- use "lewis6991/spellsitter.nvim" -- spell checker
+  use "kevinhwang91/nvim-bqf" -- better quick fix, use trouble instead
+  use "RRethy/vim-illuminate" -- highlight undercursor word
+  use "lewis6991/spellsitter.nvim" -- spell checker
   use "folke/todo-comments.nvim" -- todo comments
   -- use "liuchengxu/vista.vim"     -- outline
   -- use "simrat39/symbols-outline.nvim" -- outline
   use "stevearc/aerial.nvim"
+  -- use "stevearc/aerial.nvim"
   use "norcalli/nvim-colorizer.lua" -- show color
-  use "folke/trouble.nvim"
-  use "j-hui/fidget.nvim" -- show lsp progress
+   use "folke/trouble.nvim"
+  -- use "arkav/lualine-lsp-progress" -- show lsp progress
   use "sindrets/winshift.nvim" -- rerange window layout
   -- litee family
   use "ldelossa/litee.nvim"
@@ -257,16 +256,11 @@ return packer.startup(function(use)
   -- tools
   -- use "cdelledonne/vim-cmake"
   use "ravenxrz/neovim-cmake"
-  use {
-    "skanehira/preview-markdown.vim",
-    opt = true,
-    cmd = "PreviewMarkdown",
-  } -- NOTE:: glow required : https://github.com/charmbracelet/glow
+  use "skanehira/preview-markdown.vim" -- NOTE:: glow required : https://github.com/charmbracelet/glow
   use "voldikss/vim-translator"
   use "mtdl9/vim-log-highlighting"
   use "Pocco81/HighStr.nvim"
-  -- use "dstein64/vim-startuptime"
-  use "ravenxrz/vim-local-history"
+  use "dstein64/vim-startuptime"
   -- use "henriquehbr/nvim-startup.lua"
   -- use "AckslD/nvim-neoclip.lua"
   use "vim-test/vim-test"
@@ -275,10 +269,8 @@ return packer.startup(function(use)
     run = ":UpdateRemotePlugins"
   }
   use { 'michaelb/sniprun', run = 'bash ./install.sh' }
-  -- use "ravenxrz/DoxygenToolkit.vim"
+  use "ravenxrz/DoxygenToolkit.vim"
   use "Pocco81/AutoSave.nvim"
-  use "djoshea/vim-autoread"
-  use "jonstoler/werewolf.vim"
 
 
   -- Automatically set up your configuration after cloning packer.nvim
