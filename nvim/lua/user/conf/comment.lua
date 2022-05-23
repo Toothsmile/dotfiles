@@ -1,8 +1,8 @@
 local status_ok, comment = pcall(require, "nvim_comment")
-if not status_ok then
-  vim.notify("comment not found!")
-  return
-end
+ if not status_ok then
+   vim.notify("comment not found!")
+   return
+ end
 
 comment.setup {
   -- Linters prefer comment and line to have a space in between markers

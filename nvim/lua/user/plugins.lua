@@ -87,7 +87,7 @@ return packer.startup(function(use)
    -- Telescope
    use {
      "nvim-telescope/telescope.nvim",
-   tag = 'nvim-0.6',
+   -- tag = 'nvim-0.6',
    }
    use {
      "nvim-telescope/telescope-fzf-native.nvim",
